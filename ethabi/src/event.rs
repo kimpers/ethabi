@@ -198,7 +198,7 @@ mod tests {
 		log::{Log, RawLog},
 		signature::long_signature,
 		token::Token,
-		Event, EventParam, LogParam, ParamType,
+		Event, EventParam, Int, LogParam, ParamType,
 	};
 
 	#[test]
@@ -259,8 +259,18 @@ mod tests {
 			result,
 			Log {
 				params: [
-					("a", Token::Int(hex!("0000000000000000000000000000000000000000000000000000000000000003").into()),),
-					("b", Token::Int(hex!("0000000000000000000000000000000000000000000000000000000000000002").into()),),
+					(
+						"a",
+						Token::Int(Int::from_big_endian(&hex!(
+							"0000000000000000000000000000000000000000000000000000000000000003"
+						))),
+					),
+					(
+						"b",
+						Token::Int(Int::from_big_endian(&hex!(
+							"0000000000000000000000000000000000000000000000000000000000000002"
+						))),
+					),
 					("c", Token::Address(hex!("2222222222222222222222222222222222222222").into())),
 					("d", Token::Address(hex!("1111111111111111111111111111111111111111").into())),
 					(

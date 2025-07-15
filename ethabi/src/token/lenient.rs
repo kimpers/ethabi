@@ -90,7 +90,7 @@ impl Tokenizer for LenientTokenizer {
 			}
 		};
 
-		Ok(uint.into())
+		Ok(uint.to_big_endian())
 	}
 
 	// We don't have a proper signed int 256-bit long type, so here we're cheating. We build a U256
@@ -106,7 +106,7 @@ impl Tokenizer for LenientTokenizer {
 		let max = Uint::max_value() / 2;
 		let int = if value.starts_with('-') {
 			if abs.is_zero() {
-				return Ok(abs.into());
+				return Ok(abs.to_big_endian());
 			} else if abs > max + 1 {
 				return Err(Error::Other(Cow::Borrowed("int256 parse error: Underflow")));
 			}
@@ -117,7 +117,7 @@ impl Tokenizer for LenientTokenizer {
 			}
 			abs
 		};
-		Ok(int.into())
+		Ok(int.to_big_endian())
 	}
 }
 
@@ -139,7 +139,7 @@ mod tests {
 				"1111111111111111111111111111111111111111111111111111111111111111"
 			)
 			.unwrap(),
-			Token::Uint([0x11u8; 32].into())
+			Token::Uint(Uint::from_big_endian(&[0x11u8; 32]))
 		);
 	}
 

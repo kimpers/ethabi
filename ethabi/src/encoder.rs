@@ -164,8 +164,8 @@ fn encode_token_append(data: &mut Vec<Word>, token: &Token) {
 		Token::Bytes(ref bytes) => pad_bytes_append(data, bytes),
 		Token::String(ref s) => pad_bytes_append(data, s.as_bytes()),
 		Token::FixedBytes(ref bytes) => fixed_bytes_append(data, bytes),
-		Token::Int(int) => data.push(int.into()),
-		Token::Uint(uint) => data.push(uint.into()),
+		Token::Int(int) => data.push(int.to_big_endian()),
+		Token::Uint(uint) => data.push(uint.to_big_endian()),
 		Token::Bool(b) => {
 			let mut value = [0u8; 32];
 			if b {
@@ -183,7 +183,7 @@ mod tests {
 
 	#[cfg(not(feature = "std"))]
 	use crate::no_std_prelude::*;
-	use crate::{encode, util::pad_u32, Token};
+	use crate::{encode, util::pad_u32, Int, Token, Uint};
 
 	#[test]
 	fn encode_address() {
@@ -529,7 +529,7 @@ mod tests {
 	fn encode_uint() {
 		let mut uint = [0u8; 32];
 		uint[31] = 4;
-		let encoded = encode(&[Token::Uint(uint.into())]);
+		let encoded = encode(&[Token::Uint(Uint::from_big_endian(&uint))]);
 		let expected = hex!("0000000000000000000000000000000000000000000000000000000000000004");
 		assert_eq!(encoded, expected);
 	}
@@ -538,7 +538,7 @@ mod tests {
 	fn encode_int() {
 		let mut int = [0u8; 32];
 		int[31] = 4;
-		let encoded = encode(&[Token::Int(int.into())]);
+		let encoded = encode(&[Token::Int(Int::from_big_endian(&int))]);
 		let expected = hex!("0000000000000000000000000000000000000000000000000000000000000004");
 		assert_eq!(encoded, expected);
 	}
@@ -730,7 +730,7 @@ mod tests {
 
 	#[test]
 	fn encode_complex_tuple() {
-		let uint = Token::Uint([0x11u8; 32].into());
+		let uint = Token::Uint(Uint::from_big_endian(&[0x11u8; 32]));
 		let string = Token::String("gavofyork".to_owned());
 		let address1 = Token::Address([0x11u8; 20].into());
 		let address2 = Token::Address([0x22u8; 20].into());

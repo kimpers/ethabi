@@ -71,7 +71,7 @@ impl Tokenizer for StrictTokenizer {
 mod tests {
 	use crate::{
 		token::{StrictTokenizer, Token, Tokenizer},
-		ParamType,
+		Int, ParamType, Uint,
 	};
 
 	#[test]
@@ -132,7 +132,7 @@ mod tests {
 				"1111111111111111111111111111111111111111111111111111111111111111"
 			)
 			.unwrap(),
-			Token::Uint([0x11u8; 32].into())
+			Token::Uint(Uint::from_big_endian(&[0x11u8; 32]))
 		);
 
 		assert_eq!(
@@ -141,7 +141,7 @@ mod tests {
 				"2222222222222222222222222222222222222222222222222222222222222222"
 			)
 			.unwrap(),
-			Token::Uint([0x22u8; 32].into())
+			Token::Uint(Uint::from_big_endian(&[0x22u8; 32]))
 		);
 	}
 
@@ -153,7 +153,7 @@ mod tests {
 				"1111111111111111111111111111111111111111111111111111111111111111"
 			)
 			.unwrap(),
-			Token::Int([0x11u8; 32].into())
+			Token::Int(Int::from_big_endian(&[0x11u8; 32]))
 		);
 
 		assert_eq!(
@@ -162,7 +162,7 @@ mod tests {
 				"2222222222222222222222222222222222222222222222222222222222222222"
 			)
 			.unwrap(),
-			Token::Int([0x22u8; 32].into())
+			Token::Int(Int::from_big_endian(&[0x22u8; 32]))
 		);
 	}
 

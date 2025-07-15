@@ -54,3 +54,14 @@ impl From<uint::FromDecStrErr> for Error {
 		}
 	}
 }
+
+#[cfg(feature = "serde")]
+impl From<ethereum_types::FromDecStrErr> for Error {
+	fn from(err: ethereum_types::FromDecStrErr) -> Self {
+		use ethereum_types::FromDecStrErr::*;
+		match err {
+			InvalidCharacter => Self::Other(Cow::Borrowed("Uint parse error: InvalidCharacter")),
+			InvalidLength => Self::Other(Cow::Borrowed("Uint parse error: InvalidLength")),
+		}
+	}
+}

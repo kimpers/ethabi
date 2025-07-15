@@ -103,7 +103,7 @@ mod tests {
 
 	#[cfg(not(feature = "std"))]
 	use crate::no_std_prelude::*;
-	use crate::{Function, Param, ParamType, StateMutability, Token};
+	use crate::{Function, Param, ParamType, StateMutability, Token, Uint};
 
 	#[test]
 	fn test_function_encode_call() {
@@ -121,7 +121,7 @@ mod tests {
 
 		let mut uint = [0u8; 32];
 		uint[31] = 69;
-		let encoded = func.encode_input(&[Token::Uint(uint.into()), Token::Bool(true)]).unwrap();
+		let encoded = func.encode_input(&[Token::Uint(Uint::from_big_endian(&uint)), Token::Bool(true)]).unwrap();
 		let expected = hex!("cdcd77c000000000000000000000000000000000000000000000000000000000000000450000000000000000000000000000000000000000000000000000000000000001").to_vec();
 		assert_eq!(encoded, expected);
 
